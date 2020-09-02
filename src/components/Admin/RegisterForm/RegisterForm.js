@@ -129,7 +129,9 @@ export default function RegisterForm() {
       <Form.Item>
         <Input
           prefix={
-            <UserAddOutlined style={{ color: "rgba(0,0,0.2)", opacity: 0.7 }} />
+            <UserAddOutlined
+              style={{ color: "rgba(0,0,0,0.5)", opacity: 0.7 }}
+            />
           }
           type="email"
           name="email"
@@ -142,7 +144,7 @@ export default function RegisterForm() {
       <Form.Item>
         <Input
           prefix={
-            <LockOutlined style={{ color: "rgba(0,0,0.2)", opacity: 0.7 }} />
+            <LockOutlined style={{ color: "rgba(0,0,0,0.5)", opacity: 0.7 }} />
           }
           type="password"
           name="password"
@@ -155,7 +157,7 @@ export default function RegisterForm() {
       <Form.Item>
         <Input
           prefix={
-            <LockOutlined style={{ color: "rgba(0,0,0.2)", opacity: 0.7 }} />
+            <LockOutlined style={{ color: "rgba(0,0,0,0.5)", opacity: 0.7 }} />
           }
           type="password"
           name="repeatPassword"

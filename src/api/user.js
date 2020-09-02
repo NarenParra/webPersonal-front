@@ -34,3 +34,24 @@ export function singUpApi(data) {
       };
     });
 }
+export function singInApi(data) {
+  const url = `${BASE_PATH}/${API_VERSION}/sing-in`;
+
+  const paramas = {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return fetch(url, paramas)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}

@@ -4,6 +4,7 @@ import { Layout, Tabs } from "antd";
 import Logo from "../../../assets/img/png/logo extended - copia.png";
 import "./SignIn.scss";
 import RegisterForm from "../../../components/Admin/RegisterForm";
+import LoginForm from "../../../components/Admin/LogInForm/LoginForm";
 
 export default function SignIn() {
   const { Content } = Layout;
@@ -18,7 +19,7 @@ export default function SignIn() {
         <div className="sign-in__content-tabs">
           <Tabs type="card">
             <TabPane tab={<span>Entrar</span>} key="!">
-              Componente LoginForm
+              <LoginForm />
             </TabPane>
             <TabPane tab={<span>Nuevo Usuario</span>} key="2">
               <RegisterForm />
