@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Layout } from "antd";
+import useAuth from "../hooks/useAuth";
 import MenuTop from "../components/Admin/MenuTop";
 import MenuSider from "../components/Admin/MenuSider";
 import AdminSignIn from "../pages/Admin/SignIn";
@@ -11,10 +12,9 @@ export default function LayouAdmin(props) {
   const { routes } = props;
   const [menuCollapsed, setmenuCollapsed] = useState(false);
   const { Header, Content, Footer } = Layout;
-
-  const user = null;
-
-  if (!user) {
+  const { user, isLoading } = useAuth();
+  console.log(`user ${user}`);
+  if (!user && !isLoading) {
     return (
       <>
         <Route path="/admin/login" component={AdminSignIn} />
@@ -23,26 +23,32 @@ export default function LayouAdmin(props) {
     );
   }
 
-  return (
-    <Layout>
-      <MenuSider menuCollapsed={menuCollapsed} />
-      <Layout
-        className="layout-admin"
-        style={{ marginLeft: menuCollapsed ? "80px" : "200px" }}
-      >
-        <Header className="layout-admin__header">
-          <MenuTop
-            menuCollapsed={menuCollapsed}
-            setmenuCollapsed={setmenuCollapsed}
-          />
-        </Header>
-        <Content className="layout-admin__content">
-          <LoadRoutes routes={routes} />
-        </Content>
-        <Footer className="layout-admin__footer">Naren Parra 2020</Footer>
+  if (user && !isLoading) {
+    console.log(`user ${user}`);
+
+    return (
+      <Layout>
+        <MenuSider menuCollapsed={menuCollapsed} />
+        <Layout
+          className="layout-admin"
+          style={{ marginLeft: menuCollapsed ? "80px" : "200px" }}
+        >
+          <Header className="layout-admin__header">
+            <MenuTop
+              menuCollapsed={menuCollapsed}
+              setmenuCollapsed={setmenuCollapsed}
+            />
+          </Header>
+          <Content className="layout-admin__content">
+            <LoadRoutes routes={routes} />
+          </Content>
+          <Footer className="layout-admin__footer">Naren Parra 2020</Footer>
+        </Layout>
       </Layout>
-    </Layout>
-  );
+    );
+  } else {
+    return null;
+  }
 }
 
 function LoadRoutes({ routes }) {

@@ -7,11 +7,17 @@ import {
   PoweroffOutlined,
 } from "@ant-design/icons";
 import NdLogo from "../../../assets/img/png/logo-azul-extended.png";
+import { logout } from "../../../api/auth";
 
 import "./MenuTop.scss";
 
 export default function MenuTop(props) {
   const { menuCollapsed, setmenuCollapsed } = props;
+
+  const logoutUser = () => {
+    logout();
+    window.location.reload();
+  };
 
   return (
     <div className="menu-top">
@@ -24,7 +30,7 @@ export default function MenuTop(props) {
         </Button>
       </div>
       <div className="menu-top__right">
-        <Button type="link">
+        <Button type="link" onClick={logoutUser}>
           <PoweroffOutlined />
         </Button>
       </div>

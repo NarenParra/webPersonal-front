@@ -2,8 +2,10 @@ import { API_VERSION, BASE_PATH } from "./config";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../utils/constants";
 import jwtDecode from "jwt-decode";
 
-export function getAccessToken() {
+export function getAccessTokenApi() {
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
+
+  console.log(`Acces toque ${accessToken}`);
 
   if (!accessToken || accessToken === "null") {
     return null;
@@ -11,8 +13,9 @@ export function getAccessToken() {
   return willExpireToken(accessToken) ? null : accessToken;
 }
 
-export function getRefreshToken() {
+export function getRefreshTokenApi() {
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+  console.log(`Acces toque ${refreshToken}`);
 
   if (!refreshToken || refreshToken === "null") {
     return null;
@@ -20,7 +23,7 @@ export function getRefreshToken() {
   return willExpireToken(refreshToken) ? null : refreshToken;
 }
 
-export function refreshAccessToken(refreshToken) {
+export function refreshAccessTokenApi(refreshToken) {
   const url = `${BASE_PATH}/${API_VERSION}/refresh-access-token`;
 
   const bodyObj = {
@@ -45,13 +48,18 @@ export function refreshAccessToken(refreshToken) {
     })
     .then((result) => {
       if (!result) {
-        // to do : desloguear user
+        logout();
       } else {
         const { accessToken, refreshToken } = result;
         localStorage.setItem(ACCESS_TOKEN, accessToken);
         localStorage.setItem(REFRESH_TOKEN, refreshToken);
       }
     });
+}
+
+export function logout() {
+  localStorage.removeItem(ACCESS_TOKEN);
+  localStorage.removeItem(REFRESH_TOKEN);
 }
 
 function willExpireToken(token) {
