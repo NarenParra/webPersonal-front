@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getUsersActiveApi } from "../../../api/user";
+import { getAccessTokenApi } from "../../../api/auth";
+import ListUsers from "../../../components/Admin/users/ListUsers";
 import "./Users.scss";
 
 export default function Users() {
+  const [usersActive, setUsersActive] = useState([]);
+  const [usersInactive, setUsersInactive] = useState([]);
+  const token = getAccessTokenApi();
+
+  useEffect(() => {
+    getUsersActiveApi(token, true).then((response) => {
+      setUsersActive(response.users);
+    });
+    getUsersActiveApi(token, false).then((response) => {
+      setUsersInactive(response.users);
+    });
+  }, [token]);
   return (
-    <div>
-      <h1>lista de usuarios</h1>
+    <div className="users">
+      <ListUsers
+        usersActive={usersActive}
+        usersInactive={usersInactive}
+      ></ListUsers>
     </div>
   );
 }

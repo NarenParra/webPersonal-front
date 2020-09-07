@@ -4,9 +4,6 @@ import jwtDecode from "jwt-decode";
 
 export function getAccessTokenApi() {
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
-
-  console.log(`Acces toque ${accessToken}`);
-
   if (!accessToken || accessToken === "null") {
     return null;
   }
@@ -15,8 +12,6 @@ export function getAccessTokenApi() {
 
 export function getRefreshTokenApi() {
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-  console.log(`Acces toque ${refreshToken}`);
-
   if (!refreshToken || refreshToken === "null") {
     return null;
   }
@@ -58,8 +53,8 @@ export function refreshAccessTokenApi(refreshToken) {
 }
 
 export function logout() {
-  localStorage.removeItem(ACCESS_TOKEN);
   localStorage.removeItem(REFRESH_TOKEN);
+  localStorage.removeItem(ACCESS_TOKEN);
 }
 
 function willExpireToken(token) {

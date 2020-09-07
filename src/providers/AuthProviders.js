@@ -11,7 +11,6 @@ export const AuthContext = createContext();
 
 export default function AuthProvider(props) {
   const { children } = props;
-  console.log(`porps ${children}`);
   const [user, setUser] = useState({
     user: null,
     isLoading: true,
@@ -29,6 +28,7 @@ function checkUserLogin(setUser) {
   if (!accessToken) {
     const refreshToken = getRefreshTokenApi();
     if (!refreshToken) {
+      console.log("entra null");
       logout();
       setUser({
         user: null,
@@ -38,6 +38,8 @@ function checkUserLogin(setUser) {
       refreshAccessTokenApi(refreshToken);
     }
   } else {
+    console.log("entra null");
+
     setUser({
       user: jwtDecode(accessToken),
       isLoading: false,
