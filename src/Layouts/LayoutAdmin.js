@@ -13,6 +13,7 @@ export default function LayouAdmin(props) {
   const [menuCollapsed, setmenuCollapsed] = useState(false);
   const { Header, Content, Footer } = Layout;
   const { user, isLoading } = useAuth();
+
   if (!user && !isLoading) {
     return (
       <>

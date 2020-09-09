@@ -25,10 +25,9 @@ export default function AuthProvider(props) {
 
 function checkUserLogin(setUser) {
   const accessToken = getAccessTokenApi();
-  if (!accessToken) {
+  if (!accessToken || accessToken === "null") {
     const refreshToken = getRefreshTokenApi();
     if (!refreshToken) {
-      console.log("entra null");
       logout();
       setUser({
         user: null,
@@ -38,11 +37,9 @@ function checkUserLogin(setUser) {
       refreshAccessTokenApi(refreshToken);
     }
   } else {
-    console.log("entra null");
-
     setUser({
-      user: jwtDecode(accessToken),
       isLoading: false,
+      user: jwtDecode(accessToken),
     });
   }
 }

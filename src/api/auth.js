@@ -4,15 +4,20 @@ import jwtDecode from "jwt-decode";
 
 export function getAccessTokenApi() {
   const accessToken = localStorage.getItem(ACCESS_TOKEN);
-  if (!accessToken || accessToken === "null") {
+  if (!accessToken || accessToken === "null" || accessToken === "undefined") {
     return null;
   }
+
   return willExpireToken(accessToken) ? null : accessToken;
 }
 
 export function getRefreshTokenApi() {
   const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-  if (!refreshToken || refreshToken === "null") {
+  if (
+    !refreshToken ||
+    refreshToken === "null" ||
+    refreshToken === "undefined"
+  ) {
     return null;
   }
   return willExpireToken(refreshToken) ? null : refreshToken;
