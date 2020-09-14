@@ -6,7 +6,7 @@ import {
   emailValidation,
 } from "../../../utils/formValidation";
 
-import { singUpApi } from "../../../api/user";
+import { signUpApi } from "../../../api/user";
 
 import "./RegisterForm.scss";
 
@@ -82,7 +82,7 @@ export default function RegisterForm() {
           message: "Las contraseñas no coinciden",
         });
       } else {
-        const result = await singUpApi(input);
+        const result = await signUpApi(input);
         if (!result.ok) {
           notification["error"]({
             message: result.message,

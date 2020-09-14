@@ -3,7 +3,7 @@ import "./LoginForm.scss";
 import { Form, Input, Button, notification } from "antd";
 import { UserAddOutlined, LockOutlined } from "@ant-design/icons";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../utils/constants";
-import { singInApi } from "../../../api/user";
+import { signInApi } from "../../../api/user";
 
 export default function LoginForm() {
   const [inputs, setInputs] = useState({
@@ -18,7 +18,7 @@ export default function LoginForm() {
     });
   };
   const login = async (e) => {
-    const result = await singInApi(inputs);
+    const result = await signInApi(inputs);
 
     if (result.message) {
       notification["error"]({

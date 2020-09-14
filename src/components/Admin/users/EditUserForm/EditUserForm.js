@@ -1,30 +1,101 @@
 import React, { useState, useCallback, useEffect } from "react";
 import NoAvatar from "../../../../assets/img/png/no-avatar.png";
-import { Avatar, Form, Input, Select, Button, Row, Col } from "antd";
+import {
+  Avatar,
+  Form,
+  Input,
+  Select,
+  Button,
+  Row,
+  Col,
+  notification,
+} from "antd";
 import { useDropzone } from "react-dropzone";
-import "./EditUserFrom.scss";
 import { UserOutlined, MailOutlined, UnlockOutlined } from "@ant-design/icons";
+import {
+  getAvatarApi,
+  uploadAvatarApi,
+  updateUserApi,
+} from "../../../../api/user";
+import { getAccessTokenApi } from "../../../../api/auth";
+
+import "./EditUserFrom.scss";
 
 export default function EditUserFrom(props) {
-  const { user } = props;
+  const { user, setIsVisibleModal, setReloadUsers } = props;
   const [avatar, setAvatar] = useState(null);
-  const [userData, setUserData] = useState({
-    name: user.name,
-    lastname: user.lastname,
-    email: user.email,
-    rol: user.role,
-    avatar: user.avatar,
-  });
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    setUserData({
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+    });
+  }, [user]);
+
+  useEffect(() => {
+    if (user.avatar) {
+      getAvatarApi(user.avatar).then((response) => {
+        setAvatar(response);
+      });
+    } else {
+      setAvatar(null);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (avatar) {
-      setUserData({ ...userData, avatar });
+      setUserData({ ...userData, avatar: avatar.file });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [avatar]);
 
   const updateUser = (e) => {
-    console.log(userData);
+    const token = getAccessTokenApi();
+    let userUpdate = userData;
+
+    if (userUpdate.password || userUpdate.repeatPassword) {
+      if (userUpdate.password !== userUpdate.repeatPassword) {
+        notification["error"]({
+          message: "Contraseñas no coinciden",
+        });
+        return;
+      } else {
+        delete userUpdate.repeatPassword;
+      }
+    }
+    if (!userUpdate.name || !userUpdate.lastname || !userUpdate.email) {
+      notification["error"]({
+        message: "El nombre, apellidos y email son obligatorios ",
+      });
+      return;
+    }
+
+    if (typeof userUpdate.avatar === "object") {
+      uploadAvatarApi(token, userUpdate.avatar, user._id).then((response) => {
+        userUpdate.avatar = response.avatarName;
+        updateUserApi(token, userUpdate, user._id).then((result) => {
+          notification["success"]({
+            message: result.message,
+          });
+          setUserData({ ...userData, password: "", repeatPassword: "" });
+          setIsVisibleModal(false);
+          setReloadUsers(true);
+        });
+      });
+    } else {
+      updateUserApi(token, userUpdate, user._id).then((result) => {
+        notification["success"]({
+          message: result.message,
+        });
+        setUserData({ ...userData, password: "", repeatPassword: "" });
+        setIsVisibleModal(false);
+        setReloadUsers(true);
+      });
+    }
   };
 
   return (
@@ -41,6 +112,20 @@ export default function EditUserFrom(props) {
 
 function UploadAvatar(props) {
   const { avatar, setAvatar } = props;
+  const [avatarUrl, setAvatarUrl] = useState(null);
+
+  useEffect(() => {
+    if (avatar) {
+      if (avatar.preview) {
+        setAvatarUrl(avatar.preview);
+      } else {
+        setAvatarUrl(avatar);
+      }
+    } else {
+      setAvatarUrl(null);
+    }
+  }, [avatar]);
+
   const onDrop = useCallback(
     (aceptedFiles) => {
       const file = aceptedFiles[0];
@@ -50,7 +135,7 @@ function UploadAvatar(props) {
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: "image/jpeg, image/png",
+    accept: "image/jpg, image/png",
     noKeyboard: true,
     onDrop,
   });
@@ -60,7 +145,7 @@ function UploadAvatar(props) {
       {isDragActive ? (
         <Avatar size={150} src={NoAvatar} />
       ) : (
-        <Avatar size={150} src={avatar ? avatar.preview : NoAvatar} />
+        <Avatar size={150} src={avatarUrl ? avatarUrl : NoAvatar} />
       )}
     </div>
   );
@@ -77,6 +162,7 @@ function EditForm(props) {
             <Input
               prefix={<UserOutlined />}
               placeholder="Nombre"
+              value={userData.name}
               defaultValue={userData.name}
               onChange={(e) =>
                 setUserData({
@@ -92,7 +178,7 @@ function EditForm(props) {
             <Input
               prefix={<UserOutlined />}
               placeholder="Apellidos"
-              defaultValue={userData.lastname}
+              value={userData.lastname}
               onChange={(e) =>
                 setUserData({
                   ...userData,
@@ -109,7 +195,7 @@ function EditForm(props) {
             <Input
               prefix={<MailOutlined />}
               placeholder="Correo electronico"
-              defaultValue={userData.email}
+              value={userData.email}
               onChange={(e) =>
                 setUserData({
                   ...userData,
@@ -126,10 +212,10 @@ function EditForm(props) {
               onChange={(e) => {
                 setUserData({
                   ...userData,
-                  rol: e,
+                  role: e,
                 });
               }}
-              defaultValue={userData.rol}
+              value={userData.role}
             >
               <Option value="admin">Administrador</Option>
               <Option value="editor">Editor</Option>
@@ -145,6 +231,7 @@ function EditForm(props) {
               prefix={<UnlockOutlined />}
               type="password"
               placeholder="contraseña"
+              value={userData.password}
               onChange={(e) =>
                 setUserData({
                   ...userData,
@@ -160,6 +247,7 @@ function EditForm(props) {
               prefix={<UnlockOutlined />}
               type="password"
               placeholder="Repetir contraseña"
+              value={userData.repeatPassword}
               onChange={(e) =>
                 setUserData({
                   ...userData,
