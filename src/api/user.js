@@ -104,7 +104,8 @@ export function getUsersActiveApi(token, status) {
 export function uploadAvatarApi(token, avatar, userId) {
   const URL = `${BASE_PATH}/${API_VERSION}/upload-avatar/${userId}`;
   //obligatorio cuando queremos enviar una imagen mediante una peticion
-  const formData = new formData();
+  const formData = new FormData();
+
   formData.append("avatar", avatar, avatar.name);
   const params = {
     method: "PUT",

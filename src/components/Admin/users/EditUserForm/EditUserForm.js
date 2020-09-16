@@ -129,13 +129,14 @@ function UploadAvatar(props) {
   const onDrop = useCallback(
     (aceptedFiles) => {
       const file = aceptedFiles[0];
+      console.log(file);
       setAvatar({ file, preview: URL.createObjectURL(file) });
     },
     [setAvatar]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: "image/jpg, image/png",
+    accept: "image/jpg, image/jpeg, image/png",
     noKeyboard: true,
     onDrop,
   });
