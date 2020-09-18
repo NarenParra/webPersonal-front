@@ -66,3 +66,50 @@ export function activateMenuApi(token, menuId, status) {
       return err;
     });
 }
+
+export function addMenuApi(token, menu) {
+  const URL = `${BASE_PATH}/${API_VERSION}/add-menu/`;
+
+  const params = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(menu),
+  };
+
+  return fetch(URL, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result.message;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}
+
+export function deleteMenuApi(token, menuId) {
+  const URL = `${BASE_PATH}/${API_VERSION}/delete-menu/${menuId}`;
+
+  const params = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(URL, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result.message;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}

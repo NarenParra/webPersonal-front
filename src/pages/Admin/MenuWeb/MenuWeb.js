@@ -4,18 +4,18 @@ import MenuWebList from "../../../components/Admin/MenuWeb/MenuWebList";
 
 export default function MenuWeb() {
   const [menu, setmenu] = useState([]);
-  const [reloadMenu, setreloadMenu] = useState(false);
+  const [reloadMenu, setReloadMenu] = useState(false);
 
   useEffect(() => {
     getMenuApi().then((response) => {
       setmenu(response.menu);
     });
-    setreloadMenu(false);
+    setReloadMenu(false);
   }, [reloadMenu]);
 
   return (
     <div>
-      <MenuWebList menu={menu} setreloadMenu={setreloadMenu} />
+      <MenuWebList menu={menu} setReloadMenu={setReloadMenu} />
     </div>
   );
 }
